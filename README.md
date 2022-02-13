@@ -1,5 +1,5 @@
 # EnumBitSet
-A memory efficient `ISet` for enums that store data using bit masks.
+A memory efficient `ISet` for enums that store data using bit masks for C#.
 
 Currently, there is an implementation using `int` as data (`EnumBitSet32<T>`),
 supporting enums with up to 32 values.

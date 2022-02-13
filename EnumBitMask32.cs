@@ -9,11 +9,11 @@ namespace EnumBitSet
     public readonly struct EnumBitMask32<T> : IBitMask<EnumBitMask32<T>, T>
         where T : Enum
     {
-        public uint Mask => _data;
+        public int Mask => _data;
         
-        private readonly uint _data;
+        private readonly int _data;
 
-        public EnumBitMask32(uint data)
+        public EnumBitMask32(int data)
         {
             _data = data;
         }
@@ -43,7 +43,7 @@ namespace EnumBitSet
         public EnumBitMask32<T> GetBitMask(T data)
         {
             Contract.Requires(Convert.ToInt32(data) < 32);
-            return new EnumBitMask32<T>(1u << Convert.ToInt32(data));
+            return new EnumBitMask32<T>(1 << Convert.ToInt32(data));
         }
 
         public int CountSetBits()

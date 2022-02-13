@@ -20,7 +20,7 @@ namespace EnumBitSet
         public EnumBitSet32(params T[] values) : base(values) {}
 
 #if UNITY_2019_4_OR_NEWER
-        [SerializeField] private uint _bitMask;
+        [SerializeField] private int _bitMask;
 
         public void OnAfterDeserialize()
         {

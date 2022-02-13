@@ -124,9 +124,10 @@ namespace Tests
             bitset.ExceptWith(new TestEnum[] { TestEnum.Two, TestEnum.One });
             Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.Three }));
 
-
             bitset.ExceptWith(new TestEnum[] { TestEnum.Three });
             Assert.IsTrue(bitset.SetEquals(new TestEnum[] {}));
+
+            Assert.Throws<ArgumentNullException>(() => bitset.ExceptWith(null));
         }
 
         [Test]
@@ -142,6 +143,8 @@ namespace Tests
 
             bitset.IntersectWith(new TestEnum[] { TestEnum.One, TestEnum.Three });
             Assert.IsTrue(bitset.SetEquals(new TestEnum[] {}));
+
+            Assert.Throws<ArgumentNullException>(() => bitset.IntersectWith(null));
         }
 
         [Test]
@@ -154,6 +157,8 @@ namespace Tests
             Assert.IsTrue(bitset.Overlaps(new TestEnum[] { TestEnum.One, TestEnum.Three }));
             Assert.IsFalse(bitset.Overlaps(new TestEnum[] {}));
             Assert.IsFalse(bitset.Overlaps(new TestEnum[] { TestEnum.Two, TestEnum.Three }));
+
+            Assert.Throws<ArgumentNullException>(() => bitset.Overlaps(null));
         }
 
         [Test]
@@ -166,6 +171,8 @@ namespace Tests
 
             bitset.SymmetricExceptWith(new TestEnum[] { TestEnum.Zero, TestEnum.One, TestEnum.Three });
             Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.One }));
+
+            Assert.Throws<ArgumentNullException>(() => bitset.SymmetricExceptWith(null));
         }
 
         [Test]
@@ -178,6 +185,8 @@ namespace Tests
 
             bitset.UnionWith(new TestEnum[] { TestEnum.Zero, TestEnum.One });
             Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.Zero, TestEnum.One, TestEnum.Three }));
+
+            Assert.Throws<ArgumentNullException>(() => bitset.UnionWith(null));
         }
 
         [Test]
@@ -191,6 +200,9 @@ namespace Tests
 
             Assert.IsFalse(bitset.IsProperSubsetOf(new TestEnum[] { TestEnum.Zero }));
             Assert.IsTrue(bitset.IsProperSubsetOf(new TestEnum[] { TestEnum.Zero, TestEnum.Two }));
+
+            Assert.Throws<ArgumentNullException>(() => bitset.IsSubsetOf(null));
+            Assert.Throws<ArgumentNullException>(() => bitset.IsProperSubsetOf(null));
         }
 
         [Test]
@@ -207,6 +219,9 @@ namespace Tests
             Assert.IsTrue(bitset.IsProperSupersetOf(new TestEnum[] { TestEnum.Zero }));
             Assert.IsTrue(bitset.IsProperSupersetOf(new TestEnum[] { TestEnum.Two }));
             Assert.IsFalse(bitset.IsProperSupersetOf(new TestEnum[] { TestEnum.Zero, TestEnum.Two }));
+
+            Assert.Throws<ArgumentNullException>(() => bitset.IsSupersetOf(null));
+            Assert.Throws<ArgumentNullException>(() => bitset.IsProperSupersetOf(null));
         }
     }
 }

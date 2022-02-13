@@ -226,9 +226,9 @@ namespace EnumBitSet
             return _data.GetBitMask(value);
         }
         
-        private static TData GetBitMask(IEnumerable<T> values)
+        private static TData GetBitMask(IEnumerable<T> other)
         {
-            switch (values)
+            switch (other)
             {
                 case TData data:
                     return data;
@@ -237,11 +237,11 @@ namespace EnumBitSet
                     return bitset._data;                
                 
                 case null:
-                    return new TData();
+                    throw new ArgumentNullException("other", "Value cannot be null.");
                 
                 default:
                     var mask = new TData();
-                    foreach (T value in values)
+                    foreach (T value in other)
                     {
                         mask = mask.BitOr(mask.GetBitMask(value));
                     }

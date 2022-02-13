@@ -2,5 +2,6 @@
   "name": "gilzoide.enumbitset",
   "displayName": "Enum BitSet",
   "version": "0.1.0",
-  "type": "library"
+  "type": "library",
+  "description": "A memory efficient ISet for enums that store data using bit masks."
 }

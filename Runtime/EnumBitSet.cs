@@ -150,9 +150,21 @@ namespace EnumBitSet
 
         public void CopyTo(T[] array, int arrayIndex)
         {
+            if (array == null)
+            {
+                throw new ArgumentNullException("array", "Value cannot be null.");
+            }
+            else if (arrayIndex < 0)
+            {
+                throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, "Non negative number is required.");
+            }
+            else if (array.Length - arrayIndex < Count)
+            {
+                throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
+            }
             using (IEnumerator<T> enumerator = GetEnumerator())
             {
-                for (var i = arrayIndex; i < array.Length && enumerator.MoveNext(); i++)
+                for (var i = arrayIndex; enumerator.MoveNext(); i++)
                 {
                     array[i] = enumerator.Current;
                 }

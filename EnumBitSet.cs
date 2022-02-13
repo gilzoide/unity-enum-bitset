@@ -59,7 +59,7 @@ namespace EnumBitSet
             return _data.HaveSetBits();
         }
         
-        #region ISet
+        #region ISet<T>
 
         public void ExceptWith(IEnumerable<T> other)
         {
@@ -121,7 +121,7 @@ namespace EnumBitSet
         
         #endregion
 
-        #region ICollection
+        #region ICollection<T>
         
         void ICollection<T>.Add(T item)
         {
@@ -175,7 +175,7 @@ namespace EnumBitSet
 
         #endregion
         
-        #region IEnumerable
+        #region IEnumerable<T>
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -189,7 +189,7 @@ namespace EnumBitSet
 
         #endregion
 
-        #region IEquatable
+        #region IEquatable<EnumBitSet<T, TData>>
         
         public bool Equals(EnumBitSet<T, TData> other)
         {

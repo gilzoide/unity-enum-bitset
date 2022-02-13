@@ -18,7 +18,7 @@ namespace EnumBitSet
             _data = data;
         }
 
-        #region IBitOperable<EnumBitMask32<T>, T>
+        #region IBitMask<EnumBitMask32<T>, T>
 
         public EnumBitMask32<T> BitAnd(EnumBitMask32<T> other)
         {

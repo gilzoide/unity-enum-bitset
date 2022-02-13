@@ -1,20 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace EnumBitSet
 {
-    [Serializable]
-    public class EnumBitSet32<T> : EnumBitSet<T, EnumBitMask32<T>>
-        where T : Enum
-    {
-        public EnumBitSet32() {}
-        public EnumBitSet32(T value) : base(value) {}
-        public EnumBitSet32(IEnumerable<T> values) : base(values) {}
-        public EnumBitSet32(params T[] values) : base(values) {}
-    }
-    
     [Serializable]
     public class EnumBitSet<T, TData> : ISet<T>
 #if NET5_0_OR_GREATER
@@ -25,7 +14,7 @@ namespace EnumBitSet
         where T : Enum
         where TData : struct, IBitMask<TData, T>
     {
-        private TData _data;
+        protected TData _data;
 
         public EnumBitSet() {}
 
@@ -204,7 +193,7 @@ namespace EnumBitSet
         
         public bool Equals(EnumBitSet<T, TData> other)
         {
-            return other?._data.Equals(_data) ?? false;
+            return other != null && _data.Equals(other._data);
         }
 
         public override bool Equals(object obj)
@@ -231,6 +220,9 @@ namespace EnumBitSet
             {
                 case TData data:
                     return data;
+
+                case EnumBitSet<T, TData> bitset:
+                    return bitset._data;                
                 
                 case null:
                     return new TData();

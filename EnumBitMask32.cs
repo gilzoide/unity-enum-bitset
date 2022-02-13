@@ -9,6 +9,8 @@ namespace EnumBitSet
     public readonly struct EnumBitMask32<T> : IBitMask<EnumBitMask32<T>, T>
         where T : Enum
     {
+        public uint Mask => _data;
+        
         private readonly uint _data;
 
         public EnumBitMask32(uint data)
@@ -50,14 +52,9 @@ namespace EnumBitSet
             return BitOperations.PopCount(_data);
 #else
             var count = 0;
-            var data = _data;
-            while (data != 0)
+            foreach (int bitIndex in Commons.EnumerateSetBits(_data))
             {
-                if ((data & 1) != 0)
-                {
-                    count++;
-                }
-                data >>= 1;
+                count++;
             }
             return count;
 #endif
@@ -78,20 +75,14 @@ namespace EnumBitSet
         }
         
         #endregion
+
+        #region IEnumerable<T>
         
         public IEnumerator<T> GetEnumerator()
         {
-            var i = 0;
-            var data = _data;
-            while (data != 0)
+            foreach (int bitIndex in Commons.EnumerateSetBits(_data))
             {
-                if ((data & 1) != 0)
-                {
-                    yield return (T) Enum.ToObject(typeof(T), i);
-                }
-
-                i++;
-                data >>= 1;
+                yield return (T) Enum.ToObject(typeof(T), bitIndex);
             }
         }
 
@@ -99,5 +90,7 @@ namespace EnumBitSet
         {
             return GetEnumerator();
         }
+
+        #endregion
     }
 }

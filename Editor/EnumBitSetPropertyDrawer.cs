@@ -31,6 +31,7 @@ namespace EnumBitSet
             var args = new object[1];
             foreach (int bitIndex in Commons.EnumerateSetBits(mask))
             {
+                if (bitIndex >= enumValues.Length) continue;
                 args[0] = enumValues.GetValue(bitIndex);
                 BitSet_Add.Invoke(bitset, args);
             }

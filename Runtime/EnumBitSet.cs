@@ -226,7 +226,7 @@ namespace EnumBitSet
             return _data.GetBitMask(value);
         }
         
-        private static TData GetBitMask(IEnumerable<T> other)
+        private TData GetBitMask(IEnumerable<T> other)
         {
             switch (other)
             {
@@ -240,12 +240,7 @@ namespace EnumBitSet
                     throw new ArgumentNullException("other", "Value cannot be null.");
                 
                 default:
-                    var mask = new TData();
-                    foreach (T value in other)
-                    {
-                        mask = mask.BitOr(mask.GetBitMask(value));
-                    }
-                    return mask;
+                    return _data.GetBitMask(other);
             }
         }
     }

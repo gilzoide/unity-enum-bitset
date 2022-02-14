@@ -13,6 +13,7 @@ namespace EnumBitSet
         TData BitNot();
         
         TData GetBitMask(TConvertible data);
+        TData GetBitMask(IEnumerable<TConvertible> data);
         
         int CountSetBits();
         bool HaveSetBits();

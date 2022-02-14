@@ -18,6 +18,18 @@ namespace EnumBitSet
             _data = data;
         }
 
+        public EnumBitMask32(T value)
+        {
+            _data = GetIntBitMask(value);
+        }
+
+        public EnumBitMask32(IEnumerable<T> values)
+        {
+            _data = GetIntBitMask(values);
+        }
+
+        public EnumBitMask32(params T[] values) : this((IEnumerable<T>) values) {}
+
         #region IBitMask<EnumBitMask32<T>, T>
 
         public EnumBitMask32<T> BitAnd(EnumBitMask32<T> other)
@@ -42,8 +54,12 @@ namespace EnumBitSet
 
         public EnumBitMask32<T> GetBitMask(T data)
         {
-            Contract.Requires(Convert.ToInt32(data) < 32);
-            return new EnumBitMask32<T>(1 << Convert.ToInt32(data));
+            return new EnumBitMask32<T>(GetIntBitMask(data));
+        }
+        
+        public EnumBitMask32<T> GetBitMask(IEnumerable<T> data)
+        {
+            return new EnumBitMask32<T>(GetIntBitMask(data));
         }
 
         public int CountSetBits()
@@ -92,5 +108,21 @@ namespace EnumBitSet
         }
 
         #endregion
+
+        private static int GetIntBitMask(T data)
+        {
+            Contract.Requires(Convert.ToInt32(data) < 32);
+            return 1 << Convert.ToInt32(data);
+        }
+
+        private static int GetIntBitMask(IEnumerable<T> data)
+        {
+            int mask = 0;
+            foreach (T value in data)
+            {
+                mask |= GetIntBitMask(value);
+            }
+            return mask;
+        }
     }
 }

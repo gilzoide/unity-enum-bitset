@@ -7,6 +7,7 @@ using UnityEngine;
 namespace EnumBitSet
 {
     [CustomPropertyDrawer(typeof(EnumBitSet32<>))]
+    [CustomPropertyDrawer(typeof(EnumBitSet64<>))]
     public class EnumBitSetPropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

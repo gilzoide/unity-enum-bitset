@@ -19,5 +19,20 @@ namespace EnumBitSet
                 mask >>= 1;
             }
         }
+
+        public static IEnumerable<int> EnumerateSetBits(long mask)
+        {
+            var i = 0;
+            while (mask != 0 && i < sizeof(long) * 8)
+            {
+                if ((mask & 1) != 0)
+                {
+                    yield return i;
+                }
+
+                i++;
+                mask >>= 1;
+            }
+        }
     }
 }

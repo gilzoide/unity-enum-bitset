@@ -69,23 +69,60 @@ namespace EnumBitSet
         
         #endregion
 
-        #region IEquatable<EnumBitMask32<T>>
-        
-        public bool Equals(EnumBitMask32<T> other)
+        #region IReadOnlySet<T>
+
+        public bool Contains(T item)
         {
-            return _data == other._data;
+            var mask = GetIntBitMask(item);
+            return (_data & mask) == mask;
         }
-        
+
+        public bool IsProperSubsetOf(IEnumerable<T> other)
+        {
+            var mask = GetIntBitMask(other);
+            return (_data & mask) == _data && (mask & ~_data) != 0;
+        }
+
+        public bool IsProperSupersetOf(IEnumerable<T> other)
+        {
+            var mask = GetIntBitMask(other);
+            return (mask & _data) == mask && (_data & ~mask) != 0;
+        }
+
+        public bool IsSubsetOf(IEnumerable<T> other)
+        {
+            var mask = GetIntBitMask(other);
+            return (_data & mask) == _data;
+        }
+
+        public bool IsSupersetOf(IEnumerable<T> other)
+        {
+            var mask = GetIntBitMask(other);
+            return (mask & _data) == mask;
+        }
+
+        public bool Overlaps(IEnumerable<T> other)
+        {
+            var mask = GetIntBitMask(other);
+            return (_data & mask) != 0;
+        }
+
+        public bool SetEquals(IEnumerable<T> other)
+        {
+            var mask = GetIntBitMask(other);
+            return _data == mask;
+        }
+
         #endregion
 
         #region IReadOnlyCollection<T>
 
         public int Count => Commons.CountSetBits(_data);
-        
+
         #endregion
 
         #region IEnumerable<T>
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             foreach (var bitIndex in Commons.EnumerateSetBits(_data))
@@ -101,20 +138,39 @@ namespace EnumBitSet
 
         #endregion
 
+        #region IEquatable<EnumBitMask32<T>>
+        
+        public bool Equals(EnumBitMask32<T> other)
+        {
+            return _data == other._data;
+        }
+        
+        #endregion
+
         private static int GetIntBitMask(T data)
         {
             Contract.Requires(Commons.EnumToInt(data) < 32);
             return 1 << Commons.EnumToInt(data);
         }
 
-        private static int GetIntBitMask(IEnumerable<T> data)
+        private static int GetIntBitMask(IEnumerable<T> other)
         {
-            int mask = 0;
-            foreach (T value in data)
+            switch (other)
             {
-                mask |= GetIntBitMask(value);
+                case EnumBitMask32<T> bitmask:
+                    return bitmask._data;
+                
+                case null:
+                    throw new ArgumentNullException(nameof(other), "Value cannot be null.");
+
+                default:
+                    var mask = 0;
+                    foreach (T value in other)
+                    {
+                        mask |= GetIntBitMask(value);
+                    }
+                    return mask;
             }
-            return mask;
         }
     }
 }

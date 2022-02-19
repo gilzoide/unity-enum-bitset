@@ -6,10 +6,7 @@ namespace EnumBitSet
 {
     [Serializable]
     public class EnumBitSet<T, TData> : ISet<T>
-#if NET5_0_OR_GREATER
         , IReadOnlySet<T>
-#endif
-        , IReadOnlyCollection<T>
         where T : Enum
         where TData : struct, IBitMask<TData, T>
     {

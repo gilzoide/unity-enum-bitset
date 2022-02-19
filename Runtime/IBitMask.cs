@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EnumBitSet
 {
-    public interface IBitMask<TData, TConvertible> : IEquatable<TData>, IReadOnlyCollection<TConvertible>
+    public interface IBitMask<TData, TConvertible> : IReadOnlySet<TConvertible>, IEquatable<TData>
         where TData : struct
         where TConvertible : IConvertible
     {
@@ -17,4 +17,17 @@ namespace EnumBitSet
         
         bool HaveSetBits();
     }
+    
+#if !NET5_0_OR_GREATER
+        public interface IReadOnlySet<T> : IReadOnlyCollection<T>
+        {
+            bool Contains(T value);
+            bool IsProperSubsetOf(IEnumerable<T> other);
+            bool IsProperSupersetOf(IEnumerable<T> other);
+            bool IsSubsetOf(IEnumerable<T> other);
+            bool IsSupersetOf(IEnumerable<T> other);
+            bool Overlaps(IEnumerable<T> other);
+            bool SetEquals(IEnumerable<T> other);
+        }
+#endif
 }

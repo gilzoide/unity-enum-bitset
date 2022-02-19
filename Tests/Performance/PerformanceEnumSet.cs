@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using EnumBitSet;
 using NUnit.Framework;
@@ -5,30 +6,28 @@ using Unity.PerformanceTesting;
 
 namespace Tests.Performance
 {
-    public abstract class PerformanceEnumSet
+    public abstract class PerformanceEnumSet<T> where T : Enum
     {
-        protected enum TestEnum : long
-        {
-            Zero,
-            One,
-            Two,
-            Three,
-        }
-        
-        protected abstract ISet<TestEnum> CreateSet(params TestEnum[] initialValues);
+        static T[] EnumValues = (T[]) Enum.GetValues(typeof(T));
+        static T Zero = EnumValues[0];
+        static T One = EnumValues[1];
+        static T Two = EnumValues[2];
+        static T Three = EnumValues[3];
+
+        protected abstract ISet<T> CreateSet(params T[] initialValues);
         
         [Test, Performance]
         public void TestAddPerformance()
         {
             Measure.Method(() =>
-            {
-                var bitset = CreateSet();
+                {
+                    var bitset = CreateSet();
 
-                bitset.Add(TestEnum.Zero);
-                bitset.Add(TestEnum.One);
-                bitset.Add(TestEnum.Two);
-                bitset.Add(TestEnum.Three);
-            })
+                    bitset.Add(Zero);
+                    bitset.Add(One);
+                    bitset.Add(Two);
+                    bitset.Add(Three);
+                })
                 .SampleGroup("Add")
                 .IterationsPerMeasurement(10000)
                 .MeasurementCount(20)
@@ -41,12 +40,12 @@ namespace Tests.Performance
         {
             Measure.Method(() =>
                 {
-                    var bitset = CreateSet(TestEnum.Zero, TestEnum.One, TestEnum.Two, TestEnum.Three);
+                    var bitset = CreateSet(Zero, One, Two, Three);
 
-                    bitset.Remove(TestEnum.Zero);
-                    bitset.Remove(TestEnum.One);
-                    bitset.Remove(TestEnum.Two);
-                    bitset.Remove(TestEnum.Three);
+                    bitset.Remove(Zero);
+                    bitset.Remove(One);
+                    bitset.Remove(Two);
+                    bitset.Remove(Three);
                 })
                 .SampleGroup("Remove")
                 .IterationsPerMeasurement(10000)
@@ -62,7 +61,7 @@ namespace Tests.Performance
                 {
                     var bitset = CreateSet();
 
-                    bitset.UnionWith(new[] {TestEnum.Zero, TestEnum.One, TestEnum.Two, TestEnum.Three});
+                    bitset.UnionWith(new[] {Zero, One, Two, Three});
                 })
                 .SampleGroup("UnionWith")
                 .IterationsPerMeasurement(10000)
@@ -72,27 +71,39 @@ namespace Tests.Performance
         }
     }
     
-    public class PerformanceEnumBitSet32 : PerformanceEnumSet
+    public class PerformanceEnumBitSet32<T> : PerformanceEnumSet<T> where T : struct, Enum
     {
-        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        protected override ISet<T> CreateSet(params T[] initialValues)
         {
-            return new EnumBitSet32<TestEnum>(initialValues);
+            return new EnumBitSet32<T>(initialValues);
         }
     }
+    public class PerformanceEnumBitSet32_32 : PerformanceEnumBitSet32<TestEnum32> {}
+    public class PerformanceEnumBitSet32_64 : PerformanceEnumBitSet32<TestEnum64> {}
+    public class PerformanceEnumBitSet32_Flags32 : PerformanceEnumBitSet32<TestEnumFlags32> {}
+    public class PerformanceEnumBitSet32_Flags64 : PerformanceEnumBitSet32<TestEnumFlags64> {}
     
-    public class PerformanceEnumBitSet64 : PerformanceEnumSet
+    public class PerformanceEnumBitSet64<T> : PerformanceEnumSet<T> where T : struct, Enum
     {
-        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        protected override ISet<T> CreateSet(params T[] initialValues)
         {
-            return new EnumBitSet64<TestEnum>(initialValues);
+            return new EnumBitSet64<T>(initialValues);
         }
     }
+    public class PerformanceEnumBitSet64_32 : PerformanceEnumBitSet64<TestEnum32> {}
+    public class PerformanceEnumBitSet64_64 : PerformanceEnumBitSet64<TestEnum64> {}
+    public class PerformanceEnumBitSet64_Flags32 : PerformanceEnumBitSet64<TestEnumFlags32> {}
+    public class PerformanceEnumBitSet64_Flags64 : PerformanceEnumBitSet64<TestEnumFlags64> {}
     
-    public class PerformanceEnumHashSet : PerformanceEnumSet
+    public class PerformanceEnumHashSet<T> : PerformanceEnumSet<T> where T : struct, Enum
     {
-        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        protected override ISet<T> CreateSet(params T[] initialValues)
         {
-            return new HashSet<TestEnum>(initialValues);
+            return new HashSet<T>(initialValues);
         }
     }
+    public class PerformanceEnumHashSet_32 : PerformanceEnumHashSet<TestEnum32> {}
+    public class PerformanceEnumHashSet_64 : PerformanceEnumHashSet<TestEnum64> {}
+    public class PerformanceEnumHashSet_Flags32 : PerformanceEnumHashSet<TestEnumFlags32> {}
+    public class PerformanceEnumHashSet_Flags64 : PerformanceEnumHashSet<TestEnumFlags64> {}
 }

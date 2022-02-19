@@ -127,7 +127,8 @@ namespace EnumBitSet
         {
             foreach (var bitIndex in Commons.EnumerateSetBits(_data))
             {
-                yield return Commons.IntToEnum<T>(bitIndex);
+                var value = EnumMetadata<T>.HasFlags ? 1L << bitIndex : bitIndex;
+                yield return Commons.LongToEnum<T>(value);
             }
         }
 
@@ -149,6 +150,10 @@ namespace EnumBitSet
 
         private static long GetLongBitMask(T data)
         {
+            if (EnumMetadata<T>.HasFlags)
+            {
+                return Commons.EnumToLong(data);
+            }
             Contract.Requires(Commons.EnumToInt(data) < 64);
             return 1L << Commons.EnumToInt(data);
         }

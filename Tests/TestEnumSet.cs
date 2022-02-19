@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EnumBitSet;
 using NUnit.Framework;
 
 namespace Tests
@@ -222,6 +223,30 @@ namespace Tests
 
             Assert.Throws<ArgumentNullException>(() => bitset.IsSupersetOf(null));
             Assert.Throws<ArgumentNullException>(() => bitset.IsProperSupersetOf(null));
+        }
+    }
+    
+    public class TestEnumBitSet32 : TestEnumSet
+    {
+        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        {
+            return new EnumBitSet32<TestEnum>(initialValues);
+        }
+    }
+    
+    public class TestEnumBitSet64 : TestEnumSet
+    {
+        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        {
+            return new EnumBitSet64<TestEnum>(initialValues);
+        }
+    }
+    
+    public class TestEnumHashSet : TestEnumSet
+    {
+        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        {
+            return new HashSet<TestEnum>(initialValues);
         }
     }
 }

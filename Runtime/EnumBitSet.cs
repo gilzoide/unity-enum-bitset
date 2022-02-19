@@ -10,7 +10,6 @@ namespace EnumBitSet
         , IReadOnlySet<T>
 #endif
         , IReadOnlyCollection<T>
-        , IEquatable<EnumBitSet<T, TData>>
         where T : Enum
         where TData : struct, IBitMask<TData, T>
     {
@@ -199,26 +198,6 @@ namespace EnumBitSet
             return GetEnumerator();
         }
 
-        #endregion
-
-        #region IEquatable<EnumBitSet<T, TData>>
-        
-        public bool Equals(EnumBitSet<T, TData> other)
-        {
-            return other != null && _data.Equals(other._data);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is EnumBitSet<T, TData> other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            // ReSharper disable once NonReadonlyMemberInGetHashCode
-            return _data.GetHashCode();
-        }
-        
         #endregion
 
         private TData GetBitMask(T value)

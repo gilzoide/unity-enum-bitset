@@ -7,7 +7,7 @@ namespace EnumBitSet
     [Serializable]
     public class EnumBitSet<T, TData> : ISet<T>
         , IReadOnlySet<T>
-        where T : Enum
+        where T : struct, Enum
         where TData : struct, IBitMask<TData, T>
     {
         protected TData _data;
@@ -25,13 +25,7 @@ namespace EnumBitSet
         }
 
         public EnumBitSet(params T[] values) : this((IEnumerable<T>) values) {}
-        
-        private bool this[TData mask]
-        {
-            get => mask.HaveSetBits() && _data.BitAnd(mask).Equals(mask);
-            set => _data = value ? _data.BitOr(mask) : _data.BitAnd(mask.BitNot());
-        }
-        
+
         public bool this[T index]
         {
             get => this[GetBitMask(index)];
@@ -196,7 +190,13 @@ namespace EnumBitSet
         }
 
         #endregion
-
+        
+        private bool this[TData mask]
+        {
+            get => mask.HaveSetBits() && _data.BitAnd(mask).Equals(mask);
+            set => _data = value ? _data.BitOr(mask) : _data.BitAnd(mask.BitNot());
+        }
+        
         private TData GetBitMask(T value)
         {
             return _data.GetBitMask(value);

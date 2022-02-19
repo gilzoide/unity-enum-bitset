@@ -152,11 +152,11 @@ namespace EnumBitSet
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array", "Value cannot be null.");
+                throw new ArgumentNullException(nameof(array), "Value cannot be null.");
             }
             else if (arrayIndex < 0)
             {
-                throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, "Non negative number is required.");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, "Non negative number is required.");
             }
             else if (array.Length - arrayIndex < Count)
             {
@@ -237,7 +237,7 @@ namespace EnumBitSet
                     return bitset._data;                
                 
                 case null:
-                    throw new ArgumentNullException("other", "Value cannot be null.");
+                    throw new ArgumentNullException(nameof(other), "Value cannot be null.");
                 
                 default:
                     return _data.GetBitMask(other);

@@ -180,7 +180,7 @@ namespace EnumBitSet
             return true;
         }
 
-        public int Count => _data.CountSetBits();
+        public int Count => _data.Count;
 
         public bool IsReadOnly => false;
 

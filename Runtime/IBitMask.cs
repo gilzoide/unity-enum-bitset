@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EnumBitSet
 {
-    public interface IBitMask<TData, TConvertible> : IEquatable<TData>, IEnumerable<TConvertible>
+    public interface IBitMask<TData, TConvertible> : IEquatable<TData>, IReadOnlyCollection<TConvertible>
         where TData : struct
         where TConvertible : IConvertible
     {
@@ -15,7 +15,6 @@ namespace EnumBitSet
         TData GetBitMask(TConvertible data);
         TData GetBitMask(IEnumerable<TConvertible> data);
         
-        int CountSetBits();
         bool HaveSetBits();
     }
 }

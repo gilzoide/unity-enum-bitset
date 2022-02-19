@@ -62,11 +62,6 @@ namespace EnumBitSet
             return new EnumBitMask64<T>(GetLongBitMask(data));
         }
 
-        public int CountSetBits()
-        {
-            return Commons.CountSetBits(_data);
-        }
-
         public bool HaveSetBits()
         {
             return _data != 0;
@@ -80,6 +75,12 @@ namespace EnumBitSet
         {
             return _data == other._data;
         }
+        
+        #endregion
+        
+        #region IReadOnlyCollection<T>
+
+        public int Count => Commons.CountSetBits(_data);
         
         #endregion
 

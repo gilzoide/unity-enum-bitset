@@ -6,11 +6,11 @@ namespace Tests
 {
     public abstract class TestReadOnlyEnumSet<T> where T : Enum
     {
-        static T[] EnumValues = (T[]) Enum.GetValues(typeof(T));
-        static T Zero = EnumValues[0];
-        static T One = EnumValues[1];
-        static T Two = EnumValues[2];
-        static T Three = EnumValues[3];
+        readonly static T[] EnumValues = (T[]) Enum.GetValues(typeof(T));
+        readonly static T Zero = EnumValues[0];
+        readonly static T One = EnumValues[1];
+        readonly static T Two = EnumValues[2];
+        readonly static T Three = EnumValues[3];
 
         protected abstract IReadOnlySet<T> CreateSet(params T[] initialValues);
 

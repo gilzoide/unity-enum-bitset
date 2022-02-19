@@ -7,7 +7,7 @@ namespace EnumBitSet
 {
     [Serializable]
     public readonly struct EnumBitMask64<T> : IBitMask<EnumBitMask64<T>, T>
-        where T : Enum
+        where T : struct, Enum
     {
         public long Mask => _data;
         
@@ -87,9 +87,9 @@ namespace EnumBitSet
         
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (long bitIndex in Commons.EnumerateSetBits(_data))
+            foreach (var bitIndex in Commons.EnumerateSetBits(_data))
             {
-                yield return (T) Enum.ToObject(typeof(T), bitIndex);
+                yield return Commons.IntToEnum<T>(bitIndex);
             }
         }
 
@@ -102,8 +102,8 @@ namespace EnumBitSet
 
         private static long GetLongBitMask(T data)
         {
-            Contract.Requires(Convert.ToInt32(data) < 64);
-            return 1L << Convert.ToInt32(data);
+            Contract.Requires(Commons.EnumToInt(data) < 64);
+            return 1L << Commons.EnumToInt(data);
         }
 
         private static long GetLongBitMask(IEnumerable<T> data)

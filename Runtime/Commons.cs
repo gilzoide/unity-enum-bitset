@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+#if UNITY_5_3_OR_NEWER
+using Unity.Collections.LowLevel.Unsafe;
+#endif
 
 namespace EnumBitSet
 {
@@ -60,6 +63,28 @@ namespace EnumBitSet
                 count++;
             }
             return count;
+#endif
+        }
+
+        public static int EnumToInt<T>(T value) where T : struct, Enum
+        {
+#if UNITY_5_3_OR_NEWER
+            return UnsafeUtility.EnumToInt(value);
+#elif NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
+            return Unsafe.As<T, int>(ref value);
+#else
+            return Convert.ToInt32(value);
+#endif
+        }
+
+        public static T IntToEnum<T>(int value) where T : Enum
+        {
+#if UNITY_5_3_OR_NEWER
+            return UnsafeUtility.As<int, T>(ref value);
+#elif NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
+            return Unsafe.As<int, T>(ref value);
+#else
+            return (T) Enum.ToObject(typeof(T), value);
 #endif
         }
     }

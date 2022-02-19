@@ -35,7 +35,7 @@ namespace Tests
         }
 
         [Test]
-        public void TestSingletonEnumBitSet()
+        public void TestSingletonSet()
         {
             var bitset = CreateSet(TestEnum.Zero);
 
@@ -50,6 +50,32 @@ namespace Tests
             {
                 Assert.IsTrue(enumerator.MoveNext());
                 Assert.AreEqual(TestEnum.Zero, enumerator.Current);
+                Assert.IsFalse(enumerator.MoveNext());
+            }
+        }
+        
+        [Test]
+        public void TestFullSet()
+        {
+            var bitset = CreateSet(TestEnum.Three, TestEnum.Zero, TestEnum.Two, TestEnum.One);
+
+            Assert.AreEqual(4, bitset.Count);
+
+            Assert.IsTrue(bitset.Contains(TestEnum.Zero));
+            Assert.IsTrue(bitset.Contains(TestEnum.One));
+            Assert.IsTrue(bitset.Contains(TestEnum.Two));
+            Assert.IsTrue(bitset.Contains(TestEnum.Three));
+
+            using (var enumerator = bitset.GetEnumerator())
+            {
+                Assert.IsTrue(enumerator.MoveNext());
+                Assert.IsTrue(Enum.IsDefined(typeof(TestEnum), enumerator.Current));
+                Assert.IsTrue(enumerator.MoveNext());
+                Assert.IsTrue(Enum.IsDefined(typeof(TestEnum), enumerator.Current));
+                Assert.IsTrue(enumerator.MoveNext());
+                Assert.IsTrue(Enum.IsDefined(typeof(TestEnum), enumerator.Current));
+                Assert.IsTrue(enumerator.MoveNext());
+                Assert.IsTrue(Enum.IsDefined(typeof(TestEnum), enumerator.Current));
                 Assert.IsFalse(enumerator.MoveNext());
             }
         }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 #if UNITY_5_3_OR_NEWER
 using UnityEngine;
@@ -12,7 +11,7 @@ namespace EnumBitSet
 #if UNITY_5_3_OR_NEWER
         , ISerializationCallbackReceiver
 #endif
-        where T : Enum
+        where T : struct, Enum
     {
         public EnumBitSet64() {}
         public EnumBitSet64(T value) : base(value) {}

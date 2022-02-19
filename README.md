@@ -8,6 +8,8 @@ Bit masks are readonly structs implementing `IReadOnlySet` for enums:
 - `EnumBitMask32<T>`: uses `int` as data, supporting enums with up to 32 values.
 - `EnumBitMask64<T>`: uses `long` as data, supporting enums with up to 64 values.
 
+All implementations support enums both with and without `[Flags]` attributes.
+
 Conversions between enum values and integer types are non-boxing where possible
 by using unsafe utilities from Unity, .NET 5+ or .NET Core 3.0+
 
@@ -15,18 +17,25 @@ by using unsafe utilities from Unity, .NET 5+ or .NET Core 3.0+
 In Unity, there's a custom property drawer for selecting the containing enums:
 
 ```cs
-using EnumBitSet;
+using System;
 using UnityEngine;
+using EnumBitSet;
 
-public class ScriptWithEnumSet : MonoBehaviour
+public class ScriptWithBitSet : MonoBehaviour
 {
-    public enum TestEnum
+    public enum TesteEnum
     {
         Zero, One, Two, Three
     }
 
-    public EnumBitSet32<TestEnum> aBitset;
-    public EnumBitSet64<TestEnum> anotherBitset;
+    [Flags]
+    public enum TesteEnumFlags
+    {
+        Zero = 1 << 0, One = 1 << 1, Two = 1 << 2, Three = 1 << 3
+    }
+    
+    public EnumBitSet32<TesteEnum> aBitset;
+    public EnumBitSet64<TesteEnumFlags> anotherBitset;
 }
 ```
 

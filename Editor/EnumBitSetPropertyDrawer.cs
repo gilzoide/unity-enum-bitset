@@ -30,10 +30,15 @@ namespace EnumBitSet
             var setValuesList = Activator.CreateInstance(enumListType);
 
             EditorGUI.indentLevel++;
+            entryRect.y += entryRect.height;
+            var buttonRect = new Rect(entryRect.position, entryRect.size * new Vector2(0.45f, 1f));
+            bool selectAll = GUI.Button(buttonRect, "Select All");
+            buttonRect.x = entryRect.width - buttonRect.width;
+            bool unselectAll = GUI.Button(buttonRect, "Unselect All");
             foreach (var (name, value) in GetEnumEntries())
             {
                 var content = new GUIContent(name);
-                var hasValue = Convert.ToBoolean(Set_Contains.Invoke(currentMask, new[] { value }));
+                var hasValue = !unselectAll && (selectAll || Convert.ToBoolean(Set_Contains.Invoke(currentMask, new[] { value })));
                 
                 entryRect.y += entryRect.height;
                 entryRect.height = EditorGUI.GetPropertyHeight(SerializedPropertyType.Boolean, content);
@@ -57,6 +62,7 @@ namespace EnumBitSet
 
             if (_showFold)
             {
+                height += height;  // "Select All" | "Unselect All" buttons
                 foreach (var (name, _) in GetEnumEntries())
                 {
                     height += EditorGUI.GetPropertyHeight(SerializedPropertyType.Boolean, new GUIContent(name));

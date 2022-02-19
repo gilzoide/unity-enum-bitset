@@ -53,7 +53,7 @@ namespace EnumBitSet
             if (Convert.ToBoolean(Set_SetEquals.Invoke(currentMask, new[] { setValuesList }))) return;
             
             Undo.RecordObjects(property.serializedObject.targetObjects, "Set enum bit mask");
-            SetMask(property, (IEnumerable) setValuesList);
+            SetMask(property, enumType, (IEnumerable) setValuesList);
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -74,7 +74,7 @@ namespace EnumBitSet
 
         protected abstract object GetCurrentMask(SerializedProperty property, Type enumType);
 
-        protected abstract void SetMask(SerializedProperty property, IEnumerable enumSet);
+        protected abstract void SetMask(SerializedProperty property, Type enumType, IEnumerable enumSet);
 
         private Type GetEnumType()
         {
@@ -138,17 +138,13 @@ namespace EnumBitSet
             return Activator.CreateInstance(bitmaskType, mask);
         }
 
-        protected override void SetMask(SerializedProperty property, IEnumerable enumSet)
+        protected override void SetMask(SerializedProperty property, Type enumType, IEnumerable enumSet)
         {
-            var mask = 0;
-            foreach (var value in enumSet)
-            {
-                mask |= 1 << Convert.ToInt32(value);
-            }
-            property.FindPropertyRelative("_bitMask").intValue = mask;
+            var bitmaskType = typeof(EnumBitMask32<>).MakeGenericType(enumType);
+            dynamic mask = Activator.CreateInstance(bitmaskType, enumSet);
+            property.FindPropertyRelative("_bitMask").intValue = mask.Mask;
         }
     }
-    
     
     [CustomPropertyDrawer(typeof(EnumBitSet64<>))]
     public class EnumBitSet64PropertyDrawer : EnumBitSetPropertyDrawer
@@ -160,14 +156,11 @@ namespace EnumBitSet
             return Activator.CreateInstance(bitmaskType, mask);
         }
 
-        protected override void SetMask(SerializedProperty property, IEnumerable enumSet)
+        protected override void SetMask(SerializedProperty property, Type enumType, IEnumerable enumSet)
         {
-            var mask = 0L;
-            foreach (var value in enumSet)
-            {
-                mask |= 1L << Convert.ToInt32(value);
-            }
-            property.FindPropertyRelative("_bitMask").longValue = mask;
+            var bitmaskType = typeof(EnumBitMask64<>).MakeGenericType(enumType);
+            dynamic mask = Activator.CreateInstance(bitmaskType, enumSet);
+            property.FindPropertyRelative("_bitMask").longValue = mask.Mask;
         }
     }
 }

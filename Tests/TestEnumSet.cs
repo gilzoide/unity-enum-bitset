@@ -5,29 +5,27 @@ using NUnit.Framework;
 
 namespace Tests
 {
-    public abstract class TestEnumSet
+    public abstract class TestEnumSet<T> where T : Enum
     {
-        protected enum TestEnum
-        {
-            Zero,
-            One,
-            Two,
-            Three,
-        }
+        static T[] EnumValues = (T[]) Enum.GetValues(typeof(T));
+        static T Zero = EnumValues[0];
+        static T One = EnumValues[1];
+        static T Two = EnumValues[2];
+        static T Three = EnumValues[3];
 
-        protected abstract ISet<TestEnum> CreateSet(params TestEnum[] initialValues);
+        protected abstract ISet<T> CreateSet(params T[] initialValues);
 
         [Test]
         public void TestEmptySet()
         {
             var bitset = CreateSet();
         
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] {}));
-            foreach (var enumValue in (TestEnum[]) Enum.GetValues(typeof(TestEnum)))
+            Assert.IsTrue(bitset.SetEquals(new T[0]));
+            foreach (var enumValue in EnumValues)
             {
                 Assert.IsFalse(bitset.Contains(enumValue));
                 Assert.IsFalse(bitset.Remove(enumValue));
-                Assert.IsFalse(bitset.SetEquals(new TestEnum[] { enumValue }));
+                Assert.IsFalse(bitset.SetEquals(new[] { enumValue }));
             }
             Assert.AreEqual(0, bitset.Count);
             
@@ -37,19 +35,19 @@ namespace Tests
         [Test]
         public void TestSingletonSet()
         {
-            var bitset = CreateSet(TestEnum.Zero);
+            var bitset = CreateSet(Zero);
 
             Assert.AreEqual(1, bitset.Count);
 
-            Assert.IsTrue(bitset.Contains(TestEnum.Zero));
-            Assert.IsFalse(bitset.Contains(TestEnum.One));
-            Assert.IsFalse(bitset.Contains(TestEnum.Two));
-            Assert.IsFalse(bitset.Contains(TestEnum.Three));
+            Assert.IsTrue(bitset.Contains(Zero));
+            Assert.IsFalse(bitset.Contains(One));
+            Assert.IsFalse(bitset.Contains(Two));
+            Assert.IsFalse(bitset.Contains(Three));
 
             using (var enumerator = bitset.GetEnumerator())
             {
                 Assert.IsTrue(enumerator.MoveNext());
-                Assert.AreEqual(TestEnum.Zero, enumerator.Current);
+                Assert.AreEqual(Zero, enumerator.Current);
                 Assert.IsFalse(enumerator.MoveNext());
             }
         }
@@ -57,25 +55,25 @@ namespace Tests
         [Test]
         public void TestFullSet()
         {
-            var bitset = CreateSet(TestEnum.Three, TestEnum.Zero, TestEnum.Two, TestEnum.One);
+            var bitset = CreateSet(Three, Zero, Two, One);
 
             Assert.AreEqual(4, bitset.Count);
 
-            Assert.IsTrue(bitset.Contains(TestEnum.Zero));
-            Assert.IsTrue(bitset.Contains(TestEnum.One));
-            Assert.IsTrue(bitset.Contains(TestEnum.Two));
-            Assert.IsTrue(bitset.Contains(TestEnum.Three));
+            Assert.IsTrue(bitset.Contains(Zero));
+            Assert.IsTrue(bitset.Contains(One));
+            Assert.IsTrue(bitset.Contains(Two));
+            Assert.IsTrue(bitset.Contains(Three));
 
             using (var enumerator = bitset.GetEnumerator())
             {
                 Assert.IsTrue(enumerator.MoveNext());
-                Assert.IsTrue(Enum.IsDefined(typeof(TestEnum), enumerator.Current));
+                Assert.IsTrue(Enum.IsDefined(typeof(T), enumerator.Current));
                 Assert.IsTrue(enumerator.MoveNext());
-                Assert.IsTrue(Enum.IsDefined(typeof(TestEnum), enumerator.Current));
+                Assert.IsTrue(Enum.IsDefined(typeof(T), enumerator.Current));
                 Assert.IsTrue(enumerator.MoveNext());
-                Assert.IsTrue(Enum.IsDefined(typeof(TestEnum), enumerator.Current));
+                Assert.IsTrue(Enum.IsDefined(typeof(T), enumerator.Current));
                 Assert.IsTrue(enumerator.MoveNext());
-                Assert.IsTrue(Enum.IsDefined(typeof(TestEnum), enumerator.Current));
+                Assert.IsTrue(Enum.IsDefined(typeof(T), enumerator.Current));
                 Assert.IsFalse(enumerator.MoveNext());
             }
         }
@@ -86,24 +84,24 @@ namespace Tests
             var bitset = CreateSet();
             Assert.AreEqual(0, bitset.Count);
             
-            Assert.IsTrue(bitset.Add(TestEnum.Zero));
+            Assert.IsTrue(bitset.Add(Zero));
             Assert.AreEqual(1, bitset.Count);
-            Assert.IsFalse(bitset.Add(TestEnum.Zero));
+            Assert.IsFalse(bitset.Add(Zero));
             Assert.AreEqual(1, bitset.Count);
 
-            Assert.IsTrue(bitset.Add(TestEnum.One));
+            Assert.IsTrue(bitset.Add(One));
             Assert.AreEqual(2, bitset.Count);
-            Assert.IsFalse(bitset.Add(TestEnum.One));
+            Assert.IsFalse(bitset.Add(One));
             Assert.AreEqual(2, bitset.Count);
 
-            Assert.IsTrue(bitset.Add(TestEnum.Three));
+            Assert.IsTrue(bitset.Add(Three));
             Assert.AreEqual(3, bitset.Count);
-            Assert.IsFalse(bitset.Add(TestEnum.Three));
+            Assert.IsFalse(bitset.Add(Three));
             Assert.AreEqual(3, bitset.Count);
 
-            Assert.IsTrue(bitset.Remove(TestEnum.Zero));
+            Assert.IsTrue(bitset.Remove(Zero));
             Assert.AreEqual(2, bitset.Count);
-            Assert.IsFalse(bitset.Remove(TestEnum.Zero));
+            Assert.IsFalse(bitset.Remove(Zero));
             Assert.AreEqual(2, bitset.Count);
 
             bitset.Clear();
@@ -113,25 +111,25 @@ namespace Tests
         [Test]
         public void TestCopyTo()
         {
-            var bitset = CreateSet(TestEnum.Zero, TestEnum.One, TestEnum.Two, TestEnum.Three);
+            var bitset = CreateSet(Zero, One, Two, Three);
 
-            var array = new TestEnum[5];
+            var array = new T[5];
             bitset.CopyTo(array, 0);
-            Assert.AreEqual(new TestEnum[] {
-                TestEnum.Zero,
-                TestEnum.One,
-                TestEnum.Two,
-                TestEnum.Three,
-                0
+            Assert.AreEqual(new[] {
+                Zero,
+                One,
+                Two,
+                Three,
+                Commons.IntToEnum<T>(0)
             }, array);
 
             bitset.CopyTo(array, 1);
-            Assert.AreEqual(new TestEnum[] {
-                TestEnum.Zero,
-                TestEnum.Zero,
-                TestEnum.One,
-                TestEnum.Two,
-                TestEnum.Three,
+            Assert.AreEqual(new[] {
+                Zero,
+                Zero,
+                One,
+                Two,
+                Three,
             }, array);
 
             Assert.Throws<ArgumentNullException>(() => bitset.CopyTo(null, 0));
@@ -143,16 +141,16 @@ namespace Tests
         [Test]
         public void TestExceptWith()
         {
-            var bitset = CreateSet(TestEnum.One, TestEnum.Three);
+            var bitset = CreateSet(One, Three);
 
-            bitset.ExceptWith(new TestEnum[] { TestEnum.Zero, TestEnum.One });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.Three }));
+            bitset.ExceptWith(new[] { Zero, One });
+            Assert.IsTrue(bitset.SetEquals(new[] { Three }));
 
-            bitset.ExceptWith(new TestEnum[] { TestEnum.Two, TestEnum.One });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.Three }));
+            bitset.ExceptWith(new[] { Two, One });
+            Assert.IsTrue(bitset.SetEquals(new[] { Three }));
 
-            bitset.ExceptWith(new TestEnum[] { TestEnum.Three });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] {}));
+            bitset.ExceptWith(new[] { Three });
+            Assert.IsTrue(bitset.SetEquals(new T[0]));
 
             Assert.Throws<ArgumentNullException>(() => bitset.ExceptWith(null));
         }
@@ -160,16 +158,16 @@ namespace Tests
         [Test]
         public void TestIntersectWith()
         {
-            var bitset = CreateSet(TestEnum.Zero, TestEnum.One, TestEnum.Two, TestEnum.Three);
+            var bitset = CreateSet(Zero, One, Two, Three);
 
-            bitset.IntersectWith(new TestEnum[] { TestEnum.Zero, TestEnum.One, TestEnum.Two });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.Zero, TestEnum.One, TestEnum.Two }));
+            bitset.IntersectWith(new[] { Zero, One, Two });
+            Assert.IsTrue(bitset.SetEquals(new[] { Zero, One, Two }));
 
-            bitset.IntersectWith(new TestEnum[] { TestEnum.Zero, TestEnum.Two });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.Zero, TestEnum.Two }));
+            bitset.IntersectWith(new[] { Zero, Two });
+            Assert.IsTrue(bitset.SetEquals(new[] { Zero, Two }));
 
-            bitset.IntersectWith(new TestEnum[] { TestEnum.One, TestEnum.Three });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] {}));
+            bitset.IntersectWith(new[] { One, Three });
+            Assert.IsTrue(bitset.SetEquals(new T[0]));
 
             Assert.Throws<ArgumentNullException>(() => bitset.IntersectWith(null));
         }
@@ -177,13 +175,13 @@ namespace Tests
         [Test]
         public void TestOverlaps()
         {
-            var bitset = CreateSet(TestEnum.Zero, TestEnum.One);
+            var bitset = CreateSet(Zero, One);
 
-            Assert.IsTrue(bitset.Overlaps(new TestEnum[] { TestEnum.Zero, TestEnum.One, TestEnum.Two }));
-            Assert.IsTrue(bitset.Overlaps(new TestEnum[] { TestEnum.Zero }));
-            Assert.IsTrue(bitset.Overlaps(new TestEnum[] { TestEnum.One, TestEnum.Three }));
-            Assert.IsFalse(bitset.Overlaps(new TestEnum[] {}));
-            Assert.IsFalse(bitset.Overlaps(new TestEnum[] { TestEnum.Two, TestEnum.Three }));
+            Assert.IsTrue(bitset.Overlaps(new[] { Zero, One, Two }));
+            Assert.IsTrue(bitset.Overlaps(new[] { Zero }));
+            Assert.IsTrue(bitset.Overlaps(new[] { One, Three }));
+            Assert.IsFalse(bitset.Overlaps(new T[0]));
+            Assert.IsFalse(bitset.Overlaps(new[] { Two, Three }));
 
             Assert.Throws<ArgumentNullException>(() => bitset.Overlaps(null));
         }
@@ -191,13 +189,13 @@ namespace Tests
         [Test]
         public void TestSymmetricExceptWith()
         {
-            var bitset = CreateSet(TestEnum.Zero, TestEnum.One);
+            var bitset = CreateSet(Zero, One);
 
-            bitset.SymmetricExceptWith(new TestEnum[] { TestEnum.One, TestEnum.Three });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.Zero, TestEnum.Three }));
+            bitset.SymmetricExceptWith(new[] { One, Three });
+            Assert.IsTrue(bitset.SetEquals(new[] { Zero, Three }));
 
-            bitset.SymmetricExceptWith(new TestEnum[] { TestEnum.Zero, TestEnum.One, TestEnum.Three });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.One }));
+            bitset.SymmetricExceptWith(new[] { Zero, One, Three });
+            Assert.IsTrue(bitset.SetEquals(new[] { One }));
 
             Assert.Throws<ArgumentNullException>(() => bitset.SymmetricExceptWith(null));
         }
@@ -207,11 +205,11 @@ namespace Tests
         {
             var bitset = CreateSet();
 
-            bitset.UnionWith(new TestEnum[] { TestEnum.One, TestEnum.Three });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.One, TestEnum.Three }));
+            bitset.UnionWith(new[] { One, Three });
+            Assert.IsTrue(bitset.SetEquals(new[] { One, Three }));
 
-            bitset.UnionWith(new TestEnum[] { TestEnum.Zero, TestEnum.One });
-            Assert.IsTrue(bitset.SetEquals(new TestEnum[] { TestEnum.Zero, TestEnum.One, TestEnum.Three }));
+            bitset.UnionWith(new[] { Zero, One });
+            Assert.IsTrue(bitset.SetEquals(new[] { Zero, One, Three }));
 
             Assert.Throws<ArgumentNullException>(() => bitset.UnionWith(null));
         }
@@ -219,14 +217,14 @@ namespace Tests
         [Test]
         public void TestSubset()
         {
-            var bitset = CreateSet(TestEnum.Zero);
+            var bitset = CreateSet(Zero);
 
-            Assert.IsTrue(bitset.IsSubsetOf(new TestEnum[] { TestEnum.Zero }));
-            Assert.IsTrue(bitset.IsSubsetOf(new TestEnum[] { TestEnum.Zero, TestEnum.Three }));
-            Assert.IsFalse(bitset.IsSubsetOf(new TestEnum[] { TestEnum.One }));
+            Assert.IsTrue(bitset.IsSubsetOf(new[] { Zero }));
+            Assert.IsTrue(bitset.IsSubsetOf(new[] { Zero, Three }));
+            Assert.IsFalse(bitset.IsSubsetOf(new[] { One }));
 
-            Assert.IsFalse(bitset.IsProperSubsetOf(new TestEnum[] { TestEnum.Zero }));
-            Assert.IsTrue(bitset.IsProperSubsetOf(new TestEnum[] { TestEnum.Zero, TestEnum.Two }));
+            Assert.IsFalse(bitset.IsProperSubsetOf(new[] { Zero }));
+            Assert.IsTrue(bitset.IsProperSubsetOf(new[] { Zero, Two }));
 
             Assert.Throws<ArgumentNullException>(() => bitset.IsSubsetOf(null));
             Assert.Throws<ArgumentNullException>(() => bitset.IsProperSubsetOf(null));
@@ -235,44 +233,56 @@ namespace Tests
         [Test]
         public void TestSuperset()
         {
-            var bitset = CreateSet(TestEnum.Zero, TestEnum.Two);
+            var bitset = CreateSet(Zero, Two);
 
-            Assert.IsTrue(bitset.IsSupersetOf(new TestEnum[] { TestEnum.Zero }));
-            Assert.IsTrue(bitset.IsSupersetOf(new TestEnum[] { TestEnum.Two }));
-            Assert.IsTrue(bitset.IsSupersetOf(new TestEnum[] { TestEnum.Zero, TestEnum.Two }));
-            Assert.IsFalse(bitset.IsSupersetOf(new TestEnum[] { TestEnum.Zero, TestEnum.Three }));
-            Assert.IsFalse(bitset.IsSupersetOf(new TestEnum[] { TestEnum.One }));
+            Assert.IsTrue(bitset.IsSupersetOf(new[] { Zero }));
+            Assert.IsTrue(bitset.IsSupersetOf(new[] { Two }));
+            Assert.IsTrue(bitset.IsSupersetOf(new[] { Zero, Two }));
+            Assert.IsFalse(bitset.IsSupersetOf(new[] { Zero, Three }));
+            Assert.IsFalse(bitset.IsSupersetOf(new[] { One }));
 
-            Assert.IsTrue(bitset.IsProperSupersetOf(new TestEnum[] { TestEnum.Zero }));
-            Assert.IsTrue(bitset.IsProperSupersetOf(new TestEnum[] { TestEnum.Two }));
-            Assert.IsFalse(bitset.IsProperSupersetOf(new TestEnum[] { TestEnum.Zero, TestEnum.Two }));
+            Assert.IsTrue(bitset.IsProperSupersetOf(new[] { Zero }));
+            Assert.IsTrue(bitset.IsProperSupersetOf(new[] { Two }));
+            Assert.IsFalse(bitset.IsProperSupersetOf(new[] { Zero, Two }));
 
             Assert.Throws<ArgumentNullException>(() => bitset.IsSupersetOf(null));
             Assert.Throws<ArgumentNullException>(() => bitset.IsProperSupersetOf(null));
         }
     }
     
-    public class TestEnumBitSet32 : TestEnumSet
+    public class TestEnumBitSet32<T> : TestEnumSet<T> where T : struct, Enum
     {
-        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        protected override ISet<T> CreateSet(params T[] initialValues)
         {
-            return new EnumBitSet32<TestEnum>(initialValues);
+            return new EnumBitSet32<T>(initialValues);
         }
     }
+    public class TestEnumBitSet32_32 : TestEnumBitSet32<TestEnum32> {}
+    public class TestEnumBitSet32_64 : TestEnumBitSet32<TestEnum64> {}
+    public class TestEnumBitSet32_Flags32 : TestEnumBitSet32<TestEnumFlags32> {}
+    public class TestEnumBitSet32_Flags64 : TestEnumBitSet32<TestEnumFlags64> {}
     
-    public class TestEnumBitSet64 : TestEnumSet
+    public class TestEnumBitSet64<T> : TestEnumSet<T> where T : struct, Enum
     {
-        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        protected override ISet<T> CreateSet(params T[] initialValues)
         {
-            return new EnumBitSet64<TestEnum>(initialValues);
+            return new EnumBitSet64<T>(initialValues);
         }
     }
+    public class TestEnumBitSet64_32 : TestEnumBitSet64<TestEnum32> {}
+    public class TestEnumBitSet64_64 : TestEnumBitSet64<TestEnum64> {}
+    public class TestEnumBitSet64_Flags32 : TestEnumBitSet64<TestEnumFlags32> {}
+    public class TestEnumBitSet64_Flags64 : TestEnumBitSet64<TestEnumFlags64> {}
     
-    public class TestEnumHashSet : TestEnumSet
+    public class TestEnumHashSet<T> : TestEnumSet<T> where T : struct, Enum
     {
-        protected override ISet<TestEnum> CreateSet(params TestEnum[] initialValues)
+        protected override ISet<T> CreateSet(params T[] initialValues)
         {
-            return new HashSet<TestEnum>(initialValues);
+            return new HashSet<T>(initialValues);
         }
     }
+    public class TestEnumHashSet_32 : TestEnumHashSet<TestEnum32> {}
+    public class TestEnumHashSet_64 : TestEnumHashSet<TestEnum64> {}
+    public class TestEnumHashSet_Flags32 : TestEnumHashSet<TestEnumFlags32> {}
+    public class TestEnumHashSet_Flags64 : TestEnumHashSet<TestEnumFlags64> {}
 }

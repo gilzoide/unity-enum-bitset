@@ -64,16 +64,7 @@ namespace EnumBitSet
 
         public int CountSetBits()
         {
-#if NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-            return BitOperations.PopCount(_data);
-#else
-            var count = 0;
-            foreach (int bitIndex in Commons.EnumerateSetBits(_data))
-            {
-                count++;
-            }
-            return count;
-#endif
+            return Commons.CountSetBits(_data);
         }
 
         public bool HaveSetBits()

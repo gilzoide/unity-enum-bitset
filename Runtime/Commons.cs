@@ -34,5 +34,33 @@ namespace EnumBitSet
                 mask >>= 1;
             }
         }
+
+        public static int CountSetBits(int mask)
+        {
+#if NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
+            return BitOperations.PopCount(mask);
+#else
+            var count = 0;
+            foreach (var _ in EnumerateSetBits(mask))
+            {
+                count++;
+            }
+            return count;
+#endif
+        }
+        
+        public static int CountSetBits(long mask)
+        {
+#if NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
+            return BitOperations.PopCount(mask);
+#else
+            var count = 0;
+            foreach (var _ in EnumerateSetBits(mask))
+            {
+                count++;
+            }
+            return count;
+#endif
+        }
     }
 }

@@ -16,33 +16,15 @@ namespace EnumBitSet
 
         public EnumBitSet(T value)
         {
-            _data = GetBitMask(value);
+            _data = _data.GetBitMask(value);
         }
 
         public EnumBitSet(IEnumerable<T> values)
         {
-            _data = GetBitMask(values);
+            _data = _data.GetBitMask(values);
         }
 
         public EnumBitSet(params T[] values) : this((IEnumerable<T>) values) {}
-
-        public bool this[T index]
-        {
-            get => this[GetBitMask(index)];
-            set => this[GetBitMask(index)] = value;
-        }
-
-        public bool this[IEnumerable<T> index]
-        {
-            get => this[GetBitMask(index)];
-            set => this[GetBitMask(index)] = value;
-        }
-        
-        public bool this[params T[] indices]
-        {
-            get => this[(IEnumerable<T>) indices];
-            set => this[(IEnumerable<T>) indices] = value;
-        }
 
         public bool Any()
         {
@@ -53,60 +35,52 @@ namespace EnumBitSet
 
         public void ExceptWith(IEnumerable<T> other)
         {
-            this[other] = false;
+            _data = _data.Difference(other);
         }
 
         public void IntersectWith(IEnumerable<T> other)
         {
-            var mask = GetBitMask(other);
-            _data = _data.BitAnd(mask);
+            _data = _data.Intersection(other);
         }
 
         public bool IsProperSubsetOf(IEnumerable<T> other)
         {
-            var mask = GetBitMask(other);
-            return _data.BitAnd(mask).Equals(_data) && mask.BitAnd(_data.BitNot()).HaveSetBits();
+            return _data.IsProperSubsetOf(other);
         }
 
         public bool IsProperSupersetOf(IEnumerable<T> other)
         {
-            var mask = GetBitMask(other);
-            return mask.BitAnd(_data).Equals(mask) && _data.BitAnd(mask.BitNot()).HaveSetBits();
+            return _data.IsProperSupersetOf(other);
         }
 
         public bool IsSubsetOf(IEnumerable<T> other)
         {
-            var mask = GetBitMask(other);
-            return _data.BitAnd(mask).Equals(_data);
+            return _data.IsSubsetOf(other);
         }
 
         public bool IsSupersetOf(IEnumerable<T> other)
         {
-            var mask = GetBitMask(other);
-            return mask.BitAnd(_data).Equals(mask);
+            return _data.IsSupersetOf(other);
         }
 
         public bool Overlaps(IEnumerable<T> other)
         {
-            var mask = GetBitMask(other);
-            return _data.BitAnd(mask).HaveSetBits();
+            return _data.Overlaps(other);
         }
 
         public bool SetEquals(IEnumerable<T> other)
         {
-            var mask = GetBitMask(other);
-            return _data.Equals(mask);
+            return _data.SetEquals(other);
         }
 
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
-            var mask = GetBitMask(other);
-            _data = _data.BitXor(mask);
+            _data = _data.SymmetricDifference(other);
         }
 
         public void UnionWith(IEnumerable<T> other)
         {
-            this[other] = true;
+            _data = _data.Union(other);
         }
         
         #endregion
@@ -115,16 +89,16 @@ namespace EnumBitSet
         
         void ICollection<T>.Add(T item)
         {
-            this[item] = true;
+            _data = _data.Union(item);
         }
 
         public bool Add(T item)
         {
-            if (this[item])
+            if (_data.Contains(item))
             {
                 return false;
             }
-            this[item] = true;
+            _data = _data.Union(item);
             return true;
         }
 
@@ -135,7 +109,7 @@ namespace EnumBitSet
 
         public bool Contains(T item)
         {
-            return this[item];
+            return _data.Contains(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -163,11 +137,11 @@ namespace EnumBitSet
 
         public bool Remove(T item)
         {
-            if (!this[item])
+            if (!_data.Contains(item))
             {
                 return false;
             }
-            this[item] = false;
+            _data = _data.Difference(item);
             return true;
         }
 
@@ -190,34 +164,5 @@ namespace EnumBitSet
         }
 
         #endregion
-        
-        private bool this[TData mask]
-        {
-            get => mask.HaveSetBits() && _data.BitAnd(mask).Equals(mask);
-            set => _data = value ? _data.BitOr(mask) : _data.BitAnd(mask.BitNot());
-        }
-        
-        private TData GetBitMask(T value)
-        {
-            return _data.GetBitMask(value);
-        }
-        
-        private TData GetBitMask(IEnumerable<T> other)
-        {
-            switch (other)
-            {
-                case TData data:
-                    return data;
-
-                case EnumBitSet<T, TData> bitset:
-                    return bitset._data;                
-                
-                case null:
-                    throw new ArgumentNullException(nameof(other), "Value cannot be null.");
-                
-                default:
-                    return _data.GetBitMask(other);
-            }
-        }
     }
 }

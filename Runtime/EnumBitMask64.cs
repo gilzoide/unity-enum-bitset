@@ -6,7 +6,7 @@ using System.Diagnostics.Contracts;
 namespace EnumBitSet
 {
     [Serializable]
-    public readonly struct EnumBitMask64<T> : IBitMask<EnumBitMask64<T>, T>
+    public readonly struct EnumBitMask64<T> : IBitMask<EnumBitMask64<T>, T>, IEquatable<EnumBitMask64<T>>
         where T : struct, Enum
     {
         public long Mask => _data;
@@ -32,24 +32,40 @@ namespace EnumBitSet
 
         #region IBitMask<EnumBitMask64<T>, T>
 
-        public EnumBitMask64<T> BitAnd(EnumBitMask64<T> other)
+        public EnumBitMask64<T> Union(T value)
         {
-            return new EnumBitMask64<T>(_data & other._data);
+            var mask = GetLongBitMask(value);
+            return new EnumBitMask64<T>(_data | mask);
         }
 
-        public EnumBitMask64<T> BitOr(EnumBitMask64<T> other)
+        public EnumBitMask64<T> Union(IEnumerable<T> other)
         {
-            return new EnumBitMask64<T>(_data | other._data);
+            var mask = GetLongBitMask(other);
+            return new EnumBitMask64<T>(_data | mask);
         }
 
-        public EnumBitMask64<T> BitXor(EnumBitMask64<T> other)
+        public EnumBitMask64<T> Intersection(IEnumerable<T> other)
         {
-            return new EnumBitMask64<T>(_data ^ other._data);
+            var mask = GetLongBitMask(other);
+            return new EnumBitMask64<T>(_data & mask);
         }
 
-        public EnumBitMask64<T> BitNot()
+        public EnumBitMask64<T> Difference(T value)
         {
-            return new EnumBitMask64<T>(~_data);
+            var mask = GetLongBitMask(value);
+            return new EnumBitMask64<T>(_data & ~mask);
+        }
+
+        public EnumBitMask64<T> Difference(IEnumerable<T> other)
+        {
+            var mask = GetLongBitMask(other);
+            return new EnumBitMask64<T>(_data & ~mask);
+        }
+
+        public EnumBitMask64<T> SymmetricDifference(IEnumerable<T> other)
+        {
+            var mask = GetLongBitMask(other);
+            return new EnumBitMask64<T>(_data ^ mask);
         }
 
         public EnumBitMask64<T> GetBitMask(T data)

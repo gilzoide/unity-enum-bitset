@@ -6,7 +6,7 @@ using System.Diagnostics.Contracts;
 namespace EnumBitSet
 {
     [Serializable]
-    public readonly struct EnumBitMask32<T> : IBitMask<EnumBitMask32<T>, T>
+    public readonly struct EnumBitMask32<T> : IBitMask<EnumBitMask32<T>, T>, IEquatable<EnumBitMask32<T>>
         where T : struct, Enum
     {
         public int Mask => _data;
@@ -32,24 +32,40 @@ namespace EnumBitSet
 
         #region IBitMask<EnumBitMask32<T>, T>
 
-        public EnumBitMask32<T> BitAnd(EnumBitMask32<T> other)
+        public EnumBitMask32<T> Union(T value)
         {
-            return new EnumBitMask32<T>(_data & other._data);
+            int mask = GetIntBitMask(value);
+            return new EnumBitMask32<T>(_data | mask);
         }
 
-        public EnumBitMask32<T> BitOr(EnumBitMask32<T> other)
+        public EnumBitMask32<T> Union(IEnumerable<T> other)
         {
-            return new EnumBitMask32<T>(_data | other._data);
+            int mask = GetIntBitMask(other);
+            return new EnumBitMask32<T>(_data | mask);
         }
 
-        public EnumBitMask32<T> BitXor(EnumBitMask32<T> other)
+        public EnumBitMask32<T> Intersection(IEnumerable<T> other)
         {
-            return new EnumBitMask32<T>(_data ^ other._data);
+            int mask = GetIntBitMask(other);
+            return new EnumBitMask32<T>(_data & mask);
         }
 
-        public EnumBitMask32<T> BitNot()
+        public EnumBitMask32<T> Difference(T value)
         {
-            return new EnumBitMask32<T>(~_data);
+            int mask = GetIntBitMask(value);
+            return new EnumBitMask32<T>(_data & ~mask);
+        }
+
+        public EnumBitMask32<T> Difference(IEnumerable<T> other)
+        {
+            int mask = GetIntBitMask(other);
+            return new EnumBitMask32<T>(_data & ~mask);
+        }
+
+        public EnumBitMask32<T> SymmetricDifference(IEnumerable<T> other)
+        {
+            int mask = GetIntBitMask(other);
+            return new EnumBitMask32<T>(_data ^ mask);
         }
 
         public EnumBitMask32<T> GetBitMask(T data)

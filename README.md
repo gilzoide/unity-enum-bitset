@@ -13,6 +13,16 @@ All implementations support enums both with and without `[Flags]` attributes.
 Conversions between enum values and integer types are non-boxing where possible
 by using unsafe utilities from Unity, .NET 5+ or .NET Core 3.0+
 
+
+## Installing the package
+For now this package can be installed on Unity projects using [Unity Package Manager](https://docs.unity3d.com/Manual/Packages.html).
+Just [add a package using this repository URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html):
+
+```
+https://github.com/gilzoide/EnumBitSet.git
+```
+
+
 ## Unity Property Drawer
 In Unity, there's a custom property drawer for selecting the containing enums:
 

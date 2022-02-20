@@ -33,19 +33,19 @@ using EnumBitSet;
 
 public class ScriptWithBitSet : MonoBehaviour
 {
-    public enum TesteEnum
+    public enum TestEnum
     {
         Zero, One, Two, Three
     }
 
     [Flags]
-    public enum TesteEnumFlags
+    public enum TestEnumFlags
     {
         Zero = 1 << 0, One = 1 << 1, Two = 1 << 2, Three = 1 << 3
     }
     
-    public EnumBitSet32<TesteEnum> aBitset;
-    public EnumBitSet64<TesteEnumFlags> anotherBitset;
+    public EnumBitSet32<TestEnum> aBitset;
+    public EnumBitSet64<TestEnumFlags> anotherBitset;
 }
 ```
 

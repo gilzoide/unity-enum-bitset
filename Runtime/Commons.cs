@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2018_1_OR_NEWER
 using Unity.Collections.LowLevel.Unsafe;
 #endif
 
@@ -70,7 +70,7 @@ namespace EnumBitSet
 
         public static int EnumToInt<T>(T value) where T : struct, Enum
         {
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2018_1_OR_NEWER
             return UnsafeUtility.EnumToInt(value);
 #elif NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
             if (EnumMetadata<T>.SizeOf == sizeof(long))
@@ -85,7 +85,7 @@ namespace EnumBitSet
 
         public static T IntToEnum<T>(int value) where T : Enum
         {
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2020_1_OR_NEWER
             if (EnumMetadata<T>.SizeOf == sizeof(long))
             {
                 var longValue = (long) value;
@@ -106,10 +106,14 @@ namespace EnumBitSet
 
         public static long EnumToLong<T>(T value) where T : struct, Enum
         {
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2018_1_OR_NEWER
             if (EnumMetadata<T>.SizeOf == sizeof(long))
             {
+    #if UNITY_2020_1_OR_NEWER
                 return UnsafeUtility.As<T, long>(ref value);
+    #else
+                return Convert.ToInt64(value);
+    #endif
             }
             return UnsafeUtility.EnumToInt(value);
 #elif NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
@@ -125,7 +129,7 @@ namespace EnumBitSet
 
         public static T LongToEnum<T>(long value) where T : Enum
         {
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2020_1_OR_NEWER
             if (EnumMetadata<T>.SizeOf == sizeof(long))
             {
                 return UnsafeUtility.As<long, T>(ref value);

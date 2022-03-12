@@ -1,12 +1,10 @@
 {
     "name": "EnumBitSet.Tests.Performance",
-    "rootNamespace": "",
+    "rootNamespace": "EnumBitSet",
     "references": [
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
         "Unity.PerformanceTesting",
-        "EnumBitSet",
-        "EnumBitSet.Tests"
+        "GUID:d64bf72f5e11f410491858bae6d63428",
+        "GUID:efe063c4af43c40069edd374de08e52d"
     ],
     "includePlatforms": [
         "Editor"

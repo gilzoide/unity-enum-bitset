@@ -1,6 +1,6 @@
 {
     "name": "EnumBitSet.Editor",
-    "rootNamespace": "",
+    "rootNamespace": "EnumBitSet",
     "references": [
         "GUID:d64bf72f5e11f410491858bae6d63428"
     ],
@@ -11,7 +11,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": true,
+    "autoReferenced": false,
     "defineConstraints": [
         "UNITY_EDITOR"
     ],

@@ -1,6 +1,6 @@
 {
     "name": "EnumBitSet",
-    "rootNamespace": "",
+    "rootNamespace": "EnumBitSet",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

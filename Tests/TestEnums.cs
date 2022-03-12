@@ -1,6 +1,6 @@
 using System;
 
-namespace Tests
+namespace EnumBitSet.Tests
 {
     public enum TestEnum32
     {

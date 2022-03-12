@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using EnumBitSet;
 using NUnit.Framework;
 
-namespace Tests
+namespace EnumBitSet.Tests
 {
     public abstract class TestEnumSet<T> where T : Enum
     {

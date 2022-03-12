@@ -1,8 +1,7 @@
 using System;
-using EnumBitSet;
 using NUnit.Framework;
 
-namespace Tests
+namespace EnumBitSet.Tests
 {
     public abstract class TestReadOnlyEnumSet<T> where T : Enum
     {

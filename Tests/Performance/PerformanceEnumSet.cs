@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using EnumBitSet;
 using NUnit.Framework;
 using Unity.PerformanceTesting;
 
-namespace Tests.Performance
+namespace EnumBitSet.Tests.Performance
 {
     public abstract class PerformanceEnumSet<T> where T : Enum
     {

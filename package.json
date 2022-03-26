@@ -1,5 +1,5 @@
 {
-  "name": "gilzoide.enumbitset",
+  "name": "com.gilzoide.enumbitset",
   "displayName": "Enum BitSet",
   "version": "1.0.0",
   "description": "Fast and memory efficient implementation of C#'s ISet for enums, storing data as bit masks."

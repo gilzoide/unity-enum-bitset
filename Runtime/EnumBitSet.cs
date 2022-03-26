@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Gilzoide.NamedEnum;
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2020_1_OR_NEWER
 using UnityEngine;
 #endif
 
@@ -11,7 +11,7 @@ namespace Gilzoide.EnumBitSet
     [Serializable]
     public class EnumBitSet<T, TData> : ISet<T>
         , IReadOnlySet<T>
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2020_1_OR_NEWER
         , ISerializationCallbackReceiver
 #endif
         where T : struct, Enum
@@ -172,7 +172,7 @@ namespace Gilzoide.EnumBitSet
 
         #endregion
 
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2020_1_OR_NEWER
         #region ISerializationCallbackReceiver
 
         [SerializeField] private NamedEnum<T>[] _serializedEnums;
@@ -180,6 +180,10 @@ namespace Gilzoide.EnumBitSet
         public void OnAfterDeserialize()
         {
             Clear();
+            if (_serializedEnums == null)
+            {
+                return;
+            }
             foreach (NamedEnum<T> serializedValue in _serializedEnums)
             {
                 Add(serializedValue);

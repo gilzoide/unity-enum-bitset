@@ -1,6 +1,6 @@
 {
-    "name": "EnumBitSet.Tests",
-    "rootNamespace": "EnumBitSet",
+    "name": "Gilzoide.EnumBitSet.Tests",
+    "rootNamespace": "Gilzoide.EnumBitSet",
     "references": [
         "GUID:d64bf72f5e11f410491858bae6d63428"
     ],

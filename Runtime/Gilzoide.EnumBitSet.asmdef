@@ -1,7 +1,9 @@
 {
-    "name": "EnumBitSet",
-    "rootNamespace": "EnumBitSet",
-    "references": [],
+    "name": "Gilzoide.EnumBitSet",
+    "rootNamespace": "Gilzoide.EnumBitSet",
+    "references": [
+        "GUID:25eb7fcf0a0aa4cf98d8b0f5ac723517"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

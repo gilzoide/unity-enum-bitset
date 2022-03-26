@@ -1,6 +1,6 @@
 {
-    "name": "EnumBitSet.Tests.Performance",
-    "rootNamespace": "EnumBitSet",
+    "name": "Gilzoide.EnumBitSet.Tests.Performance",
+    "rootNamespace": "Gilzoide.EnumBitSet",
     "references": [
         "Unity.PerformanceTesting",
         "GUID:d64bf72f5e11f410491858bae6d63428",

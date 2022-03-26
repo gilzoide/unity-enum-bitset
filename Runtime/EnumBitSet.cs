@@ -1,12 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gilzoide.NamedEnum;
+#if UNITY_5_3_OR_NEWER
+using UnityEngine;
+#endif
 
-namespace EnumBitSet
+namespace Gilzoide.EnumBitSet
 {
     [Serializable]
     public class EnumBitSet<T, TData> : ISet<T>
         , IReadOnlySet<T>
+#if UNITY_5_3_OR_NEWER
+        , ISerializationCallbackReceiver
+#endif
         where T : struct, Enum
         where TData : struct, IBitMask<TData, T>
     {
@@ -164,5 +171,37 @@ namespace EnumBitSet
         }
 
         #endregion
+
+#if UNITY_5_3_OR_NEWER
+        #region ISerializationCallbackReceiver
+
+        [SerializeField] private NamedEnum<T>[] _serializedEnums;
+
+        public void OnAfterDeserialize()
+        {
+            Clear();
+            foreach (NamedEnum<T> serializedValue in _serializedEnums)
+            {
+                Add(serializedValue);
+            }
+        }
+
+        public void OnBeforeSerialize()
+        {
+            if (_serializedEnums?.Length != Count)
+            {
+                _serializedEnums = new NamedEnum<T>[Count];
+            }
+            
+            var i = 0;
+            foreach (T value in _data)
+            {
+                _serializedEnums[i] = new NamedEnum<T>(value);
+                i++;
+            }
+        }
+
+        #endregion
+#endif
     }
 }

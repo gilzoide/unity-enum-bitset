@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Unity.PerformanceTesting;
 
-namespace EnumBitSet.Tests.Performance
+namespace Gilzoide.EnumBitSet.Tests.Performance
 {
     public abstract class PerformanceEnumSet<T> where T : Enum
     {

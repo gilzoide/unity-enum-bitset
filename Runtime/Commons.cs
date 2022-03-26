@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using Unity.Collections.LowLevel.Unsafe;
 #endif
 
-namespace EnumBitSet
+namespace Gilzoide.EnumBitSet
 {
     public static class Commons
     {

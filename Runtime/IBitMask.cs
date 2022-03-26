@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace EnumBitSet
+namespace Gilzoide.EnumBitSet
 {
-    public interface IBitMask<TData, T> : IReadOnlySet<T>
+    public interface IBitMask<out TData, T> : IReadOnlySet<T>
     {
         TData Union(T value);
         TData Union(IEnumerable<T> other);

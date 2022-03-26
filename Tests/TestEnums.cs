@@ -1,6 +1,6 @@
 using System;
 
-namespace EnumBitSet.Tests
+namespace Gilzoide.EnumBitSet.Tests
 {
     public enum TestEnum32
     {

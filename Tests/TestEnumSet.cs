@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace EnumBitSet.Tests
+namespace Gilzoide.EnumBitSet.Tests
 {
     public abstract class TestEnumSet<T> where T : Enum
     {

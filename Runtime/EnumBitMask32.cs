@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace EnumBitSet
+namespace Gilzoide.EnumBitSet
 {
     [Serializable]
     public readonly struct EnumBitMask32<T> : IBitMask<EnumBitMask32<T>, T>, IEquatable<EnumBitMask32<T>>

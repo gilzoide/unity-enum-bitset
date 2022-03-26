@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace EnumBitSet.Tests
+namespace Gilzoide.EnumBitSet.Tests
 {
     public abstract class TestReadOnlyEnumSet<T> where T : Enum
     {

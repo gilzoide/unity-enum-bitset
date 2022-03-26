@@ -11,7 +11,7 @@ Bit masks are readonly structs implementing `IReadOnlySet` for enums:
 All implementations support enums both with and without `[Flags]` attributes.
 
 Conversions between enum values and integer types are non-boxing where possible
-by using unsafe utilities from Unity, .NET 5+ or .NET Core 3.0+
+by using unsafe utilities from Unity 2018+, .NET 5+ or .NET Core 3.0+
 
 
 ## Installing the package
@@ -23,8 +23,9 @@ https://github.com/gilzoide/EnumBitSet.git
 ```
 
 
-## Unity Property Drawer
-In Unity, there's a custom property drawer for selecting the containing enums:
+## Unity 2020+ Serialization and Property Drawer
+In Unity 2020+, enum bitsets are serializable and there's a custom property
+drawer for selecting the containing enums:
 
 ```cs
 using System;

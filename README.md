@@ -24,30 +24,74 @@ https://github.com/gilzoide/EnumBitSet.git
 
 
 ## Unity 2020+ Serialization and Property Drawer
-In Unity 2020+, enum bitsets are serializable and there's a custom property
-drawer for selecting the containing enums:
+In Unity 2020+, `EnumBitSet`s are serializable directly as generic classes.
+There's also a custom property drawer for selecting the containing enums:
 
 ```cs
 using System;
 using UnityEngine;
-using EnumBitSet;
+using Gilzoide.EnumBitSet;
+
+public enum TestEnum
+{
+    Zero, One, Two, Three
+}
+
+[Flags]
+public enum TestEnumFlags
+{
+    Zero = 1 << 0, One = 1 << 1, Two = 1 << 2, Three = 1 << 3
+}
 
 public class ScriptWithBitSet : MonoBehaviour
-{
-    public enum TestEnum
-    {
-        Zero, One, Two, Three
-    }
-
-    [Flags]
-    public enum TestEnumFlags
-    {
-        Zero = 1 << 0, One = 1 << 1, Two = 1 << 2, Three = 1 << 3
-    }
-    
+{    
     public EnumBitSet32<TestEnum> aBitset;
     public EnumBitSet64<TestEnumFlags> anotherBitset;
 }
 ```
 
 ![](Extras~/CustomDrawer.png)
+
+## Unity 2019- Serialization and Property Drawer
+In Unity 2019 and earlier, create non-generic classes that
+inherit from the generic ones:
+
+```cs
+using System;
+using UnityEngine;
+using Gilzoide.EnumBitSet;
+
+public enum TestEnum
+{
+    Zero, One, Two, Three
+}
+
+[Flags]
+public enum TestEnumFlags
+{
+    Zero = 1 << 0, One = 1 << 1, Two = 1 << 2, Three = 1 << 3
+}
+
+[Serializable]
+public class TestEnumBitSet32 : EnumBitSet32<TestEnum> {}
+
+[Serializable]
+public class TestEnumFlagsBitSet64 : EnumBitSet64<TestEnumFlags> {}
+
+public class ScriptWithBitSet : MonoBehaviour
+{
+    public EnumBitSet32<TestEnum> aBitset;
+    public EnumBitSet64<TestEnumFlags> anotherBitset;
+}
+```
+
+For the custom Property Drawer, the same applies.
+Create a class that inherits from `EnumBitSetPropertyDrawer`:
+
+```cs
+using UnityEditor;
+using Gilzoide.EnumBitSet.Editor;
+
+[CustomPropertyDrawer(typeof(TestEnumBitSet32))]
+public class TestEnumBitSet32PropertyDrawer : EnumBitSetPropertyDrawer {}
+```

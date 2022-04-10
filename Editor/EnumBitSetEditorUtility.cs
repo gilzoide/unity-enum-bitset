@@ -10,7 +10,7 @@ namespace Gilzoide.EnumBitSet.Editor
             SerializedProperty serializedEnums = bitsetProperty.FindPropertyRelative("_serializedEnums");
             for (var i = 0; i < serializedEnums.arraySize; i++)
             {
-                string name = serializedEnums.GetArrayElementAtIndex(i).FindPropertyRelative("_name").stringValue;
+                string name = serializedEnums.GetArrayElementAtIndex(i).FindPropertyRelative("Name").stringValue;
                 yield return name;
             }
         }

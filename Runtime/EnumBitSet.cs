@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Gilzoide.NamedEnum;
-#if UNITY_2020_1_OR_NEWER
+#if UNITY_5_3_OR_NEWER
 using UnityEngine;
 #endif
 
@@ -11,7 +10,7 @@ namespace Gilzoide.EnumBitSet
     [Serializable]
     public class EnumBitSet<T, TData> : ISet<T>
         , IReadOnlySet<T>
-#if UNITY_2020_1_OR_NEWER
+#if UNITY_5_3_OR_NEWER
         , ISerializationCallbackReceiver
 #endif
         where T : struct, Enum
@@ -172,10 +171,10 @@ namespace Gilzoide.EnumBitSet
 
         #endregion
 
-#if UNITY_2020_1_OR_NEWER
+#if UNITY_5_3_OR_NEWER
         #region ISerializationCallbackReceiver
 
-        [SerializeField] private NamedEnum<T>[] _serializedEnums;
+        [SerializeField] private NamedEnum[] _serializedEnums;
 
         public void OnAfterDeserialize()
         {
@@ -184,9 +183,9 @@ namespace Gilzoide.EnumBitSet
             {
                 return;
             }
-            foreach (NamedEnum<T> serializedValue in _serializedEnums)
+            foreach (NamedEnum serializedValue in _serializedEnums)
             {
-                Add(serializedValue);
+                Add(serializedValue.Get<T>());
             }
         }
 
@@ -194,13 +193,17 @@ namespace Gilzoide.EnumBitSet
         {
             if (_serializedEnums?.Length != Count)
             {
-                _serializedEnums = new NamedEnum<T>[Count];
+                _serializedEnums = new NamedEnum[Count];
             }
             
             var i = 0;
             foreach (T value in _data)
             {
-                _serializedEnums[i] = new NamedEnum<T>(value);
+                _serializedEnums[i] = new NamedEnum
+                {
+                    Value = Commons.EnumToInt(value),
+                    Name = value.ToString(),
+                };
                 i++;
             }
         }
@@ -208,4 +211,18 @@ namespace Gilzoide.EnumBitSet
         #endregion
 #endif
     }
+    
+#if UNITY_5_3_OR_NEWER
+    [Serializable]
+    internal struct NamedEnum
+    {
+        public int Value;
+        public string Name;
+
+        public T Get<T>() where T : struct, Enum
+        {
+            return Enum.TryParse(Name, out T value) ? value : Commons.IntToEnum<T>(Value);
+        }
+    }
+#endif
 }

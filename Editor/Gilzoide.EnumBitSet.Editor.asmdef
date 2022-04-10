@@ -13,8 +13,7 @@
     "precompiledReferences": [],
     "autoReferenced": false,
     "defineConstraints": [
-        "UNITY_EDITOR",
-        "UNITY_2020_1_OR_NEWER"
+        "UNITY_EDITOR"
     ],
     "versionDefines": [],
     "noEngineReferences": false

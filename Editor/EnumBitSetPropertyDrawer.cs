@@ -70,21 +70,29 @@ namespace Gilzoide.EnumBitSet.Editor
 
         private Type GetEnumType()
         {
-            return fieldInfo.FieldType.GetGenericArguments()[0];
+            Type[] genericArgs = fieldInfo.FieldType.GetGenericArgumentsOfBase(typeof(EnumBitSet<,>));
+            if (genericArgs?.Length > 0)
+            {
+                return genericArgs[0];
+            }
+
+            throw new Exception("EnumBitSetPropertyDrawer can only be drawer for types inheriting from EnumBitSet<,>");
         }
 
-        private static void SetSerializedEnums(SerializedProperty baseProperty, IEnumerable<(string, int)> entries)
+        private void SetSerializedEnums(SerializedProperty baseProperty, IEnumerable<(string, int)> entries)
         {
             SerializedProperty serializedEnums = baseProperty.FindPropertyRelative("_serializedEnums");
             serializedEnums.ClearArray();
+
+            Array enumValues = GetEnumType().GetEnumValues();
 
             var serializedIndex = 0;
             foreach ((string name, int index) in entries)
             {
                 serializedEnums.InsertArrayElementAtIndex(serializedIndex);
                 SerializedProperty newEnum = serializedEnums.GetArrayElementAtIndex(serializedIndex);
-                newEnum.FindPropertyRelative("_name").stringValue = name;
-                newEnum.FindPropertyRelative("_value").enumValueIndex = index;
+                newEnum.FindPropertyRelative("Name").stringValue = name;
+                newEnum.FindPropertyRelative("Value").intValue = Convert.ToInt32(enumValues.GetValue(index));
                 serializedIndex++;
             }
         }

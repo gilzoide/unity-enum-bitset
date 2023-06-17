@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,10 +11,10 @@ namespace Gilzoide.EnumBitSet.Editor
     public class EnumBitSetPropertyDrawer : PropertyDrawer
     {
         private readonly Vector2 BUTTON_PADDING = new Vector2(4, 0);
-        
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            List<string> currentEnums = EnumBitSetEditorUtility.GetSerializedEnumNames(property).ToList();
+            List<string> currentEnums = new List<string>(EnumBitSetEditorUtility.GetSerializedEnumNames(property));
             string joinedNames = string.Join(" | ", currentEnums);
             label.text += " [" + joinedNames + "]";
             label.tooltip = joinedNames;
@@ -38,19 +37,22 @@ namespace Gilzoide.EnumBitSet.Editor
             buttonRect.x += entryRect.width * 0.5f + BUTTON_PADDING.x;
             bool unselectAll = GUI.Button(buttonRect, "Unselect All");
 
-            // Draw every enum, returning the names of the marked ones
-            List<(string, int)> newEnums = GetEnumType().GetEnumNames().Select((name, i) => (name, i))
-                .Where(entry =>
+            // Draw every enum, saving the names of the marked ones
+            string[] enumNames = GetEnumType().GetEnumNames();
+            List<(string, int)> markedEnums = new List<(string, int)>();
+            for (int i = 0; i < enumNames.Length; i++)
+            {
+                string name = enumNames[i];
+                entryRect.y += space + entryRect.height;
+                bool hasValue = !unselectAll && (selectAll || currentEnums.Contains(name));
+                if (EditorGUI.Toggle(entryRect, name, hasValue))
                 {
-                    var content = new GUIContent(entry.name);
-                    entryRect.y += space + entryRect.height;
-                    bool hasValue = !unselectAll && (selectAll || currentEnums.Contains(entry.name));
-                    return EditorGUI.Toggle(entryRect, content, hasValue);
+                    markedEnums.Add((name, i));
                 }
-            ).ToList();
+            }
             EditorGUI.indentLevel--;
             
-            SetSerializedEnums(property, newEnums);
+            SetSerializedEnums(property, markedEnums);
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

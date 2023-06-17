@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -72,6 +73,10 @@ namespace Gilzoide.EnumBitSet.Editor
             if (propertyType.IsArray)
             {
                 propertyType = propertyType.GetElementType();
+            }
+            else if (typeof(IList).IsAssignableFrom(propertyType))
+            {
+                propertyType = propertyType.GetGenericArguments()[0];
             }
 
             Type[] genericArgs = propertyType.GetGenericArgumentsOfBase(typeof(EnumBitSet<,>));

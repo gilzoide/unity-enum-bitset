@@ -9,6 +9,7 @@ namespace Gilzoide.EnumBitSet
     {
         public EnumBitSet64() {}
         public EnumBitSet64(T value) : base(value) {}
+        public EnumBitSet64(EnumBitMask64<T> value) : base(value) {}
         public EnumBitSet64(IEnumerable<T> values) : base(values) {}
         public EnumBitSet64(params T[] values) : base(values) {}
     }

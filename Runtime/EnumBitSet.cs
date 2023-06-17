@@ -20,6 +20,11 @@ namespace Gilzoide.EnumBitSet
 
         public EnumBitSet() {}
 
+        public EnumBitSet(TData value)
+        {
+            _data = value;
+        }
+
         public EnumBitSet(T value)
         {
             _data = _data.GetBitMask(value);
@@ -35,6 +40,16 @@ namespace Gilzoide.EnumBitSet
         public bool Any()
         {
             return _data.HaveSetBits();
+        }
+
+        public static implicit operator TData(EnumBitSet<T, TData> self)
+        {
+            return self._data;
+        }
+
+        public static implicit operator EnumBitSet<T, TData>(TData data)
+        {
+            return new EnumBitSet<T, TData>(data);
         }
         
         #region ISet<T>

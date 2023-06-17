@@ -19,9 +19,11 @@ namespace Gilzoide.EnumBitSet.Editor
             string joinedNames = string.Join(" | ", currentEnums);
             label.text += " [" + joinedNames + "]";
             label.tooltip = joinedNames;
+
+            float lineHeight = EditorGUIUtility.singleLineHeight;
+            float space = EditorGUIUtility.standardVerticalSpacing;
             
-            float labelHeight = EditorGUI.GetPropertyHeight(SerializedPropertyType.String, label);
-            var entryRect = new Rect(position.x, position.y, position.width, labelHeight);
+            var entryRect = new Rect(position.x, position.y, position.width, lineHeight);
             property.isExpanded = EditorGUI.PropertyField(entryRect, property, label); 
             if (!property.isExpanded)
             {
@@ -30,7 +32,7 @@ namespace Gilzoide.EnumBitSet.Editor
             
             EditorGUI.indentLevel++;
             // "Select All" | "Unselect All" buttons
-            entryRect.y += entryRect.height;
+            entryRect.y += space + entryRect.height;
             var buttonRect = new Rect(entryRect.position, entryRect.size * new Vector2(0.5f, 1f) - BUTTON_PADDING);
             bool selectAll = GUI.Button(buttonRect, "Select All");
             buttonRect.x += entryRect.width * 0.5f + BUTTON_PADDING.x;
@@ -41,8 +43,7 @@ namespace Gilzoide.EnumBitSet.Editor
                 .Where(entry =>
                 {
                     var content = new GUIContent(entry.name);
-                    entryRect.y += entryRect.height;
-                    entryRect.height = EditorGUI.GetPropertyHeight(SerializedPropertyType.Boolean, content);
+                    entryRect.y += space + entryRect.height;
                     bool hasValue = !unselectAll && (selectAll || currentEnums.Contains(entry.name));
                     return EditorGUI.Toggle(entryRect, content, hasValue);
                 }
@@ -54,17 +55,16 @@ namespace Gilzoide.EnumBitSet.Editor
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            float height = EditorGUI.GetPropertyHeight(SerializedPropertyType.String, label);
-            
-            if (!property.isExpanded)
-            {
-                return height;
-            }
+            float lineHeight = EditorGUIUtility.singleLineHeight;
+            float space = EditorGUIUtility.standardVerticalSpacing;
 
-            return height
-                + height  // "Select All" | "Unselect All" buttons
-                + GetEnumType().GetEnumNames()
-                    .Sum(name => EditorGUI.GetPropertyHeight(SerializedPropertyType.Boolean, new GUIContent(name)));
+            float height = lineHeight;
+            if (property.isExpanded)
+            {
+                height += space + lineHeight;  // "Select All" | "Unselect All" buttons
+                height += GetEnumType().GetEnumNames().Length * (space + lineHeight);
+            }
+            return height;
         }
 
         private Type GetEnumType()

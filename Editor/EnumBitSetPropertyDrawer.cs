@@ -11,8 +11,6 @@ namespace Gilzoide.EnumBitSet.Editor
     public class EnumBitSetPropertyDrawer : PropertyDrawer
     {
         private readonly Vector2 BUTTON_PADDING = new Vector2(4, 0);
-            
-        private bool _isShowingChildren;
         
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -23,8 +21,8 @@ namespace Gilzoide.EnumBitSet.Editor
             
             float labelHeight = EditorGUI.GetPropertyHeight(SerializedPropertyType.String, label);
             var entryRect = new Rect(position.x, position.y, position.width, labelHeight);
-            _isShowingChildren = EditorGUI.PropertyField(entryRect, property, label); 
-            if (!_isShowingChildren)
+            property.isExpanded = EditorGUI.PropertyField(entryRect, property, label); 
+            if (!property.isExpanded)
             {
                 return;
             }
@@ -57,7 +55,7 @@ namespace Gilzoide.EnumBitSet.Editor
         {
             float height = EditorGUI.GetPropertyHeight(SerializedPropertyType.String, label);
             
-            if (!_isShowingChildren)
+            if (!property.isExpanded)
             {
                 return height;
             }

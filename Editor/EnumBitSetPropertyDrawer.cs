@@ -68,7 +68,13 @@ namespace Gilzoide.EnumBitSet.Editor
 
         private Type GetEnumType()
         {
-            Type[] genericArgs = fieldInfo.FieldType.GetGenericArgumentsOfBase(typeof(EnumBitSet<,>));
+            Type propertyType = fieldInfo.FieldType;
+            if (propertyType.IsArray)
+            {
+                propertyType = propertyType.GetElementType();
+            }
+
+            Type[] genericArgs = propertyType.GetGenericArgumentsOfBase(typeof(EnumBitSet<,>));
             if (genericArgs?.Length > 0)
             {
                 return genericArgs[0];

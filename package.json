@@ -1,9 +1,9 @@
 {
   "name": "com.gilzoide.enum-bitset",
   "displayName": "Enum BitSet",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Fast and memory efficient implementation of C#'s ISet for enums, storing data as bit masks.",
-  "homepage": "https://github.com/gilzoide/EnumBitSet",
+  "homepage": "https://github.com/gilzoide/unity-enum-bitset",
   "license": "Unlicense",
   "author": {
     "name": "Gil Barbosa Reis"

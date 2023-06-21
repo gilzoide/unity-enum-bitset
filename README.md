@@ -24,7 +24,7 @@ openupm add com.gilzoide.enum-bitset
 Otherwise, you can install directly using the [Unity Package Manager](https://docs.unity3d.com/Manual/Packages.html) with the following URL:
 
 ```
-https://github.com/gilzoide/unity-enum-bitset.git#1.0.0
+https://github.com/gilzoide/unity-enum-bitset.git#1.1.0
 ```
 
 
